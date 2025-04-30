@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-import { FilmType } from "./Films"; // Updated import path and type
+import { FilmType } from "./Film"; // Updated import path and type
 import { CloseOutlined, EditOutlined, DeleteOutlined, CalendarOutlined, UserOutlined, TagOutlined, ExclamationCircleFilled, VideoCameraOutlined } from "@ant-design/icons"; // Added icons
 
 interface FilmDetailProps {
@@ -29,7 +29,7 @@ const FilmDetail = ({
 
     try {
       // Updated API endpoint with film.id
-      await axios.delete(`/api/films/${film.id}`, { // Changed endpoint
+      await axios.delete(`/api/film/${film.id}`, { // Changed endpoint
         headers: { Authorization: `Bearer ${getToken()}` }
       });
       onDelete(); // Call onDelete callback from parent

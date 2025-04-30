@@ -1,4 +1,4 @@
-// Films.tsx - Main component for managing films
+// Film.tsx - Main component for managing film
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
@@ -33,7 +33,7 @@ export type GenreType = {
 const fetchFilmList = async (token: string | null, page = 1, limit = 12) => { // Increased limit for grid view
   // Changed API endpoint
   return await axios.get<{ data: FilmType[], total: number }>( // Assuming API returns pagination data
-    `/api/films?page=${page}&limit=${limit}`, // Changed endpoint
+    `/api/film?page=${page}&limit=${limit}`, // Changed endpoint
     {
       headers: { Authorization: `Bearer ${token}` }
     }
@@ -48,7 +48,7 @@ const fetchGenres = async (token: string | null) => {
   });
 };
 
-const Films = () => {
+const Film = () => {
   const { getToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   // Renamed state variable and type
@@ -57,7 +57,7 @@ const Films = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   // Updated queryKey, queryFn, and data variable name
-  const { data: filmResponse, refetch: refetchFilms } = useQuery({ // Renamed data variable
+  const { data: filmResponse, refetch: refetchFilm } = useQuery({ // Renamed data variable
     queryKey: ["filmList", currentPage], // Changed query key
     queryFn: () => fetchFilmList(getToken(), currentPage) // Changed function call
   });
@@ -96,12 +96,12 @@ const Films = () => {
   };
 
   const handleFormSubmit = () => {
-    refetchFilms(); // Use renamed refetch function
+    refetchFilm(); // Use renamed refetch function
     setIsFormOpen(false);
   };
 
   const handleDeleteSuccess = () => {
-    refetchFilms(); // Use renamed refetch function
+    refetchFilm(); // Use renamed refetch function
     setSelectedFilm(null); // Use renamed state setter
   };
 
@@ -109,9 +109,9 @@ const Films = () => {
     setCurrentPage(page);
   };
 
-  const films = filmResponse?.data?.data || []; // Extract films array
-  // const totalFilms = filmResponse?.data?.total || 0; // Extract total count if available
-  // const totalPages = Math.ceil(totalFilms / 12); // Calculate total pages if needed
+  const film = filmResponse?.data?.data || []; // Extract film array
+  // const totalFilm = filmResponse?.data?.total || 0; // Extract total count if available
+  // const totalPages = Math.ceil(totalFilm / 12); // Calculate total pages if needed
 
   return (
     // Changed styling: background, padding, max-width
@@ -132,9 +132,9 @@ const Films = () => {
         </div>
 
         {/* Film List Section - Pass renamed props */}
-        {/* Pass films array directly */}
+        {/* Pass film array directly */}
         <FilmList
-          films={films}
+          films={film}
           onEdit={handleEditClick}
           onView={handleViewClick}
           onPageChange={handlePageChange}
@@ -170,4 +170,4 @@ const Films = () => {
   );
 };
 
-export default Films;
+export default Film;

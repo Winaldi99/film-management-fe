@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-import { FilmType, GenreType } from "../pages/Films"; // Updated import path and types
+import { FilmType, GenreType } from "../pages/Film"; // Updated import path and types
 import { CloseOutlined, SaveOutlined, VideoCameraOutlined, UserOutlined, TagOutlined, LinkOutlined, PictureOutlined, EditFilled, PlusCircleFilled } from "@ant-design/icons"; // Added icons
 
 interface FilmFormProps {

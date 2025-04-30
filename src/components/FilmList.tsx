@@ -1,5 +1,5 @@
 // FilmList.tsx - Component to display list of films in a card grid
-import { FilmType } from "../pages/Films"; // Updated import path and type
+import { FilmType } from "../pages/Film"; // Updated import path and type
 import { EyeOutlined, EditOutlined, LeftOutlined, RightOutlined, PlayCircleOutlined, TagOutlined } from "@ant-design/icons"; // Added icons
 
 interface FilmListProps {
