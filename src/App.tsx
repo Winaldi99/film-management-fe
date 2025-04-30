@@ -10,6 +10,9 @@ import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
+import Genre from "./pages/Genre";
+import Films from "./pages/Films";
+import Comment from "./pages/Comment";
 import Register from "./pages/Register";
 import PrivateRoute from "./utils/PrivateRoute";
 import PublicRoute from "./utils/PublicRoute";
@@ -52,6 +55,30 @@ function App() {
             element={
               <PrivateRoute>
                 <Post />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="films"
+            element={
+              <PrivateRoute>
+                <Films />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="genre"
+            element={
+              <PrivateRoute>
+                <Genre />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="comment"
+            element={
+              <PrivateRoute>
+                <Comment />
               </PrivateRoute>
             }
           />
