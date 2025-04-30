@@ -10,8 +10,8 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../utils/AuthProvider";
 
 const navigation = [{ name: "Post", to: "/posts", current: false },
-                    { name: "Genre", to: "/genres", current: false },
-                    { name: "Films", to: "/films", current: false },
+                    { name: "Genre", to: "/genre", current: false },
+                    { name: "Films", to: "/film", current: false },
                     { name: "Comment", to: "/comment", current: false },];
 
 function classNames(...classes: string[]) {
