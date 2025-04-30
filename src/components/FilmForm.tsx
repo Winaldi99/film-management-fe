@@ -79,16 +79,13 @@ const FilmForm = ({
     setIsSubmitting(true);
     setError("");
 
-    // Ensure payload keys match backend expectations
-    // Assuming backend expects 'director', 'genre_id', 'image_url' based on FilmType
     const payload = {
         title: formData.title.trim(),
         director: formData.director.trim(),
-        genre_id: formData.genreId, // Send as genre_id
-        image_url: formData.imageUrl.trim() // Send as image_url
+        genre_id: formData.genreId,
+        image_url: formData.imageUrl.trim()
     };
 
-    // Basic Validation
     if (!payload.title || !payload.director || !payload.genre_id) {
         setError("Title, Director, and Genre are required.");
         setIsSubmitting(false);
@@ -97,20 +94,19 @@ const FilmForm = ({
 
     try {
       if (isEditMode && film) {
-        // Update existing film - Updated endpoint
-        await axios.put(`/api/films/${film.id}`, payload, { // Changed endpoint
+        // Update existing film - Gunakan endpoint singular
+        await axios.put(`/api/film/${film.id}`, payload, { // <--- UBAH DI SINI
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       } else {
-        // Create new film - Updated endpoint
-        await axios.post("/api/films", payload, { // Changed endpoint
+        // Create new film - Gunakan endpoint singular
+        await axios.post("/api/film", payload, { // <--- UBAH DI SINI
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       }
-      onSubmit(); // Call parent onSubmit (refreshes list, closes form)
+      onSubmit();
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || err.response?.data?.error || "An error occurred while saving the film.";
-      // Handle validation errors (if backend sends them structured)
       if (err.response?.data?.errors) {
           const validationErrors = Object.values(err.response.data.errors).flat().join(' ');
           setError(`Validation failed: ${validationErrors}`);

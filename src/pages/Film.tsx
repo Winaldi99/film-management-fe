@@ -18,6 +18,7 @@ export type FilmType = {
     id: number;
     category: string; // Assuming Genre API returns 'name'
   };
+  
   image_url: string;
   created_at: string;
   updated_at: string;
