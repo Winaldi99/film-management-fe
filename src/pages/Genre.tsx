@@ -107,7 +107,7 @@ const Genre = () => {
       {/* Genre List Section - Pass renamed props */}
       {genreData && (
         <GenreList
-          genres={genreData.data} // Pass renamed prop 'genres'
+          genre={genreData.data} // Pass renamed prop 'genres'
           onEdit={handleEditClick}
           onView={handleViewClick}
           onPageChange={handlePageChange}
