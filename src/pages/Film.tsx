@@ -26,7 +26,7 @@ export type FilmType = {
 // Renamed Type for clarity (could reuse from Genre page if structure is identical)
 export type GenreType = {
   id: number;
-  name: string; // Assuming Genre API returns 'name'
+  category: string; // Assuming Genre API returns 'name'
 };
 
 // Updated fetch function name and endpoint

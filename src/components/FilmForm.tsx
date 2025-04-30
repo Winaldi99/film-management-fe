@@ -215,7 +215,7 @@ const FilmForm = ({
                 genres.map((genre) => (
                   // Use genre.id and genre.name
                   <option key={genre.id} value={genre.id}>
-                    {genre.name}
+                    {genre.category}
                   </option>
                 ))
               )}
