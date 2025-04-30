@@ -1,4 +1,4 @@
-// Genre.tsx - Main component for managing genres
+// Genre.tsx - Main component for managing genre
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
@@ -35,7 +35,7 @@ const Genre = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   // Updated queryKey, queryFn, and data variable name
-  const { data: genreData, refetch: refetchGenres } = useQuery({
+  const { data: genreData, refetch: refetchGenre } = useQuery({
     queryKey: ["genreList", currentPage], // Changed query key
     queryFn: () => fetchGenreList(getToken(), currentPage) // Changed function call
   });
@@ -61,10 +61,6 @@ const Genre = () => {
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
-    // Optional: Deselect genre when form closes if not viewing details
-    // if (!selectedGenre) {
-    //   setSelectedGenre(null);
-    // }
   };
 
   const handleCloseDetail = () => {
@@ -72,14 +68,12 @@ const Genre = () => {
   };
 
   const handleFormSubmit = () => {
-    refetchGenres(); // Use renamed refetch function
+    refetchGenre(); // Use renamed refetch function
     setIsFormOpen(false);
-    // Optionally close detail view after successful edit from detail view
-    // setSelectedGenre(null);
   };
 
   const handleDeleteSuccess = () => {
-    refetchGenres(); // Use renamed refetch function
+    refetchGenre(); // Use renamed refetch function
     setSelectedGenre(null); // Use renamed state setter
   };
 
@@ -93,7 +87,7 @@ const Genre = () => {
       <div className="flex justify-between items-center mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
         {/* Changed styling: text size, weight, color */}
         <h1 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300">
-          Genres Management
+          Genre Management
         </h1>
         <button
           onClick={handleAddNewClick}
@@ -107,7 +101,7 @@ const Genre = () => {
       {/* Genre List Section - Pass renamed props */}
       {genreData && (
         <GenreList
-          genre={genreData.data} // Pass renamed prop 'genres'
+          genre={genreData.data} // Pass renamed prop 'genre'
           onEdit={handleEditClick}
           onView={handleViewClick}
           onPageChange={handlePageChange}
@@ -127,7 +121,6 @@ const Genre = () => {
       )}
 
       {/* Genre Detail Modal - Pass renamed prop 'genre' */}
-      {/* Condition ensures Detail only shows if a genre is selected AND the form is NOT open */}
       {selectedGenre && !isFormOpen && (
         <GenreDetail
           genre={selectedGenre} // Pass renamed prop 'genre'
