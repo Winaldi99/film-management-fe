@@ -108,7 +108,7 @@ const FilmCard = ({ film, onEdit, onView }: FilmCardProps) => {
         {/* Changed styling: Genre badge position and style */}
         <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 backdrop-blur-sm px-2.5 py-1 rounded-md text-xs font-medium text-white flex items-center gap-1">
           <TagOutlined />
-          {film.genre?.name || "N/A"} {/* Use film.genre */}
+          {film.genre?.category || "N/A"} {/* Use film.genre */}
         </div>
       </div>
       {/* Changed styling: Card content area */}
