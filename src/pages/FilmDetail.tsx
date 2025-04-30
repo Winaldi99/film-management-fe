@@ -112,7 +112,7 @@ const FilmDetail = ({
               <div className="mb-5 flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Genre:</span>
                   <span className="bg-indigo-100 dark:bg-indigo-900/60 px-3 py-1 rounded-full text-sm font-semibold text-indigo-800 dark:text-indigo-200 flex items-center gap-1">
-                       <TagOutlined /> {film.genre?.name || "Unspecified"}
+                       <TagOutlined /> {film.genre?.category || "Unspecified"}
                   </span>
               </div>
 

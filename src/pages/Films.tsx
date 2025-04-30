@@ -5,7 +5,7 @@ import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
 import FilmList from "../components/FilmList"; // Renamed import
 import FilmForm from "../components/FilmForm"; // Renamed import
-import FilmDetail from "./FIlmDetail"; // Renamed import
+import FilmDetail from "./FilmDetail"; // Renamed import
 import { VideoCameraAddOutlined } from "@ant-design/icons"; // Changed Icon
 
 // Updated Type: Renamed, 'author' -> 'director', 'category'/'category_id' -> 'genre'/'genre_id'
@@ -16,7 +16,7 @@ export type FilmType = {
   genre_id: number; // Changed from 'category_id'
   genre: { // Changed from 'category'
     id: number;
-    name: string; // Assuming Genre API returns 'name'
+    category: string; // Assuming Genre API returns 'name'
   };
   image_url: string;
   created_at: string;
