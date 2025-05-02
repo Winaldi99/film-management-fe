@@ -3,7 +3,8 @@ import {
 } from "@headlessui/react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../utils/AuthProvider";
-import { LogoutOutlined, BellOutlined, MenuOutlined, CloseOutlined, PlaySquareOutlined } from "@ant-design/icons";
+import { LogoutOutlined, BellOutlined, MenuOutlined, CloseOutlined } from "@ant-design/icons";
+import { Clapperboard } from "lucide-react"; // Ganti dengan ikon Lucide
 
 const navigation = [
   { name: "Film", to: "/film", current: false },
@@ -26,7 +27,7 @@ const Navbar = () => {
               {/* Logo and brand on the left */}
               <div className="flex items-center">
                 <div className="flex items-center space-x-2">
-                  <PlaySquareOutlined className="text-4xl text-red-500" />
+                  <Clapperboard className="text-4xl text-red-500" />
                   <span className="text-white font-bold text-xl hidden md:block">BenMovie</span>
                 </div>
               </div>
@@ -98,7 +99,7 @@ const Navbar = () => {
                       isActive 
                         ? 'text-yellow-300 bg-gray-700' 
                         : 'text-gray-300 hover:bg-gray-700 hover:text-yellow-300',
-                      'block px-3 py-3 rounded-md text-base font-medium border-b border-gray-700 flex items-center'
+                      'px-3 py-3 rounded-md text-base font-medium border-b border-gray-700 flex items-center'
                     )
                   }
                 >
