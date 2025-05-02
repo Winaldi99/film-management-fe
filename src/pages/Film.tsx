@@ -132,7 +132,7 @@ const Film = () => {
 
       {/* Film Form Modal */}
       {isFormOpen && (
-        <FilmForm // Renamed component
+        <FilmForm// Renamed component
           isOpen={isFormOpen}
           onClose={handleCloseForm}
           onSubmit={handleFormSubmit}
