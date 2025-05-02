@@ -2,8 +2,13 @@
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
+<<<<<<< HEAD
 import { FilmType } from "./Films";
 import { CloseOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+=======
+import { FilmType } from "./Film"; // Updated import path and type
+import { CloseOutlined, EditOutlined, DeleteOutlined, CalendarOutlined, UserOutlined, TagOutlined, ExclamationCircleFilled, VideoCameraOutlined } from "@ant-design/icons"; // Added icons
+>>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
 
 interface FilmDetailProps {
   film: FilmType;
@@ -23,7 +28,12 @@ const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
     setError("");
 
     try {
+<<<<<<< HEAD
       await axios.delete(`/api/films/${film.id}`, {
+=======
+      // Updated API endpoint with film.id
+      await axios.delete(`/api/film/${film.id}`, { // Changed endpoint
+>>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
         headers: { Authorization: `Bearer ${getToken()}` }
       });
       onDelete();
@@ -97,10 +107,28 @@ const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
                 Directed by {film.director}
               </p>
 
+<<<<<<< HEAD
               <div className="space-y-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
                 <div className="flex">
                   <span className="w-24 font-medium">Added on:</span>
                   <span>{formatDate(film.created_at)}</span>
+=======
+              {/* Use film.genre */}
+              <div className="mb-5 flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Genre:</span>
+                  <span className="bg-indigo-100 dark:bg-indigo-900/60 px-3 py-1 rounded-full text-sm font-semibold text-indigo-800 dark:text-indigo-200 flex items-center gap-1">
+                       <TagOutlined /> {film.genre?.category || "Unspecified"}
+                  </span>
+              </div>
+
+
+              {/* Changed styling: Metadata section */}
+              <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400 border-t pt-4 border-gray-200 dark:border-slate-700">
+                <div className="flex items-center gap-2">
+                    <CalendarOutlined />
+                    <span className="w-28 font-medium text-gray-600 dark:text-gray-300">Added on:</span>
+                    <span>{formatDate(film.created_at)}</span>
+>>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
                 </div>
 
                 {film.updated_at !== film.created_at && (

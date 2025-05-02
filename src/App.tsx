@@ -11,7 +11,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
 import Genre from "./pages/Genre";
-import Films from "./pages/Films";
+import Films from "./pages/Film";
 import Comment from "./pages/Comment";
 import Register from "./pages/Register";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -59,7 +59,7 @@ function App() {
             }
           />
           <Route
-            path="films"
+            path="film"
             element={
               <PrivateRoute>
                 <Films />

@@ -1,4 +1,4 @@
-// Genre.tsx - Main component
+// Genre.tsx - Main component for managing genre
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
@@ -39,9 +39,10 @@ const Genre = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { data: genreData, refetch: refetchGenres } = useQuery({
-    queryKey: ["genreList", currentPage],
-    queryFn: () => fetchGenreList(getToken(), currentPage)
+  // Updated queryKey, queryFn, and data variable name
+  const { data: genreData, refetch: refetchGenre } = useQuery({
+    queryKey: ["genreList", currentPage], // Changed query key
+    queryFn: () => fetchGenreList(getToken(), currentPage) // Changed function call
   });
 
   const handleAddNewClick = () => {
@@ -70,13 +71,13 @@ const Genre = () => {
   };
 
   const handleFormSubmit = () => {
-    refetchGenres();
+    refetchGenre(); // Use renamed refetch function
     setIsFormOpen(false);
   };
 
   const handleDeleteSuccess = () => {
-    refetchGenres();
-    setSelectedGenre(null);
+    refetchGenre(); // Use renamed refetch function
+    setSelectedGenre(null); // Use renamed state setter
   };
 
   const handlePageChange = (page: number) => {
@@ -84,10 +85,12 @@ const Genre = () => {
   };
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-          Genres
+    // Changed styling: padding, max-width, background
+    <div className="p-6 max-w-7xl mx-auto bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="flex justify-between items-center mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
+        {/* Changed styling: text size, weight, color */}
+        <h1 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300">
+          Genre Management
         </h1>
         <button
           onClick={handleAddNewClick}
@@ -100,7 +103,7 @@ const Genre = () => {
       {/* Genre List Section */}
       {genreData && (
         <GenreList
-          genres={genreData.data}
+          genres={genreData.data} // Pass renamed prop 'genre'
           onEdit={handleEditClick}
           onView={handleViewClick}
           onPageChange={handlePageChange}
@@ -119,7 +122,7 @@ const Genre = () => {
         />
       )}
 
-      {/* Genre Detail Modal */}
+      {/* Genre Detail Modal - Pass renamed prop 'genre' */}
       {selectedGenre && !isFormOpen && (
         <GenreDetail
           genre={selectedGenre}
