@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // GenreForm.tsx
-=======
-// GenreForm.tsx - Modal form for adding/editing genre
->>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
 import { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";

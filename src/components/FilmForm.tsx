@@ -2,13 +2,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-<<<<<<< HEAD
 import { FilmType, GenreType } from "../pages/Films";
 import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
-=======
-import { FilmType, GenreType } from "../pages/Film"; // Updated import path and types
-import { CloseOutlined, SaveOutlined, VideoCameraOutlined, UserOutlined, TagOutlined, LinkOutlined, PictureOutlined, EditFilled, PlusCircleFilled } from "@ant-design/icons"; // Added icons
->>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
 
 interface FilmFormProps {
   isOpen: boolean;
@@ -70,7 +65,6 @@ const FilmForm = ({
     setIsSubmitting(true);
     setError("");
 
-<<<<<<< HEAD
     try {
       if (isEditMode && film) {
         // Update existing film
@@ -80,46 +74,12 @@ const FilmForm = ({
       } else {
         // Create new film
         await axios.post("/api/films", formData, {
-=======
-    const payload = {
-        title: formData.title.trim(),
-        director: formData.director.trim(),
-        genre_id: formData.genreId,
-        image_url: formData.imageUrl.trim()
-    };
-
-    if (!payload.title || !payload.director || !payload.genre_id) {
-        setError("Title, Director, and Genre are required.");
-        setIsSubmitting(false);
-        return;
-    }
-
-    try {
-      if (isEditMode && film) {
-        // Update existing film - Gunakan endpoint singular
-        await axios.put(`/api/film/${film.id}`, payload, { // <--- UBAH DI SINI
-          headers: { Authorization: `Bearer ${getToken()}` }
-        });
-      } else {
-        // Create new film - Gunakan endpoint singular
-        await axios.post("/api/film", payload, { // <--- UBAH DI SINI
->>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       }
       onSubmit();
     } catch (err: any) {
-<<<<<<< HEAD
       setError(err.response?.data?.message || "An error occurred while saving the film");
-=======
-      const errorMsg = err.response?.data?.message || err.response?.data?.error || "An error occurred while saving the film.";
-      if (err.response?.data?.errors) {
-          const validationErrors = Object.values(err.response.data.errors).flat().join(' ');
-          setError(`Validation failed: ${validationErrors}`);
-      } else {
-          setError(errorMsg);
-      }
->>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
     } finally {
       setIsSubmitting(false);
     }
@@ -193,21 +153,8 @@ const FilmForm = ({
               onChange={handleChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
-<<<<<<< HEAD
               {genres.length === 0 && (
                 <option value="">No genres available</option>
-=======
-              {/* Map over renamed 'genres' prop */}
-              {genres.length === 0 ? (
-                <option value="" disabled>Loading genres...</option>
-              ) : (
-                genres.map((genre) => (
-                  // Use genre.id and genre.name
-                  <option key={genre.id} value={genre.id}>
-                    {genre.category}
-                  </option>
-                ))
->>>>>>> 6e1b5c049d4436ca7f33042c37e2a4953aab3c53
               )}
               {genres.map((genre) => (
                 <option key={genre.id} value={genre.id}>
