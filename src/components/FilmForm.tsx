@@ -2,146 +2,168 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-// Renamed import source and types
-import { FilmType, GenreType } from "../pages/Film";
+// Pastikan path import ini benar mengarah ke file definisi type Anda
+import { FilmType, GenreType } from "../pages/Film"; // <-- Sesuaikan path jika perlu
 import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
 
-// Renamed interface and updated properties/types
+// Interface untuk props komponen
 interface FilmFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
-  film: FilmType | null; // Renamed prop and type
+  onSubmit: () => void; // Callback setelah submit sukses
+  film: FilmType | null; // Data film jika mode edit
   isEditMode: boolean;
-  genres: GenreType[]; // Renamed prop and type
+  genres: GenreType[]; // Daftar genre yang tersedia
 }
 
-// Renamed state interface properties
+// Interface untuk state form data
 interface FormData {
   title: string;
-  director: string; // Renamed from author
-  genreId: number; // Renamed from categoryId
+  director: string;
+  // Tipe genreId diubah menjadi number | "" untuk menangani kondisi "belum dipilih"
+  genreId: number | ""; // <--- PERUBAHAN TIPE
   imageUrl: string;
 }
 
-// Renamed component and destructured props
 const FilmForm = ({
   isOpen,
   onClose,
   onSubmit,
-  film, // Renamed prop
+  film,
   isEditMode,
-  genres // Renamed prop
+  genres
 }: FilmFormProps) => {
   const { getToken } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Updated state structure and initial value logic
+  // Inisialisasi state form data
   const [formData, setFormData] = useState<FormData>({
     title: "",
-    director: "", // Renamed field
-    // Use genres for initial value
-    genreId: genres.length > 0 ? genres[0].id : 0, // Renamed field
+    director: "",
+    // Nilai awal genreId diubah menjadi string kosong "" (belum dipilih)
+    genreId: "", // <--- PERUBAHAN NILAI AWAL
     imageUrl: ""
   });
 
+  // Effect untuk mengisi form saat mode edit atau mereset saat mode tambah
   useEffect(() => {
-    // If editing an existing film, populate the form
-    if (isEditMode && film) { // Check film prop
+    if (isEditMode && film) {
+      // Mode Edit: Isi form dengan data film
       setFormData({
         title: film.title,
-        director: film.director, // Use director field
-        // Use genre_id and genres for value
-        genreId: film.genre_id || (genres.length > 0 ? genres[0].id : 0), // Use genreId field
-        imageUrl: film.image_url
+        director: film.director,
+        // Gunakan genre_id dari film, atau "" jika tidak ada (meski seharusnya ada)
+        genreId: film.genre_id || "", // <--- PENYESUAIAN EDIT
+        imageUrl: film.image_url || "" // Gunakan || "" untuk handle null/undefined
       });
     } else if (!isEditMode) {
-      // Reset form for adding new, ensuring default genre is set if available
-       setFormData({
+      // Mode Tambah: Reset form ke nilai awal
+      setFormData({
         title: "",
         director: "",
-        genreId: genres.length > 0 ? genres[0].id : 0,
+        // Reset genreId ke string kosong ""
+        genreId: "", // <--- PENYESUAIAN RESET
         imageUrl: ""
       });
     }
-  // Watch film and genres now
-  }, [isEditMode, film, genres]);
+    // Hapus 'genres' dari dependency array agar tidak memicu reset saat genres baru terload
+  }, [isEditMode, film]); // <--- DEPENDENCY ARRAY DIPERBAIKI
 
+  // Handler untuk perubahan pada input form
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      // Check for genreId when parsing
-      [name]: name === "genreId" ? parseInt(value, 10) : value
+      // Jika field adalah genreId:
+      // - Jika value ada (bukan string kosong), parse ke integer
+      // - Jika value kosong, set state ke string kosong ""
+      // Untuk field lain, gunakan value apa adanya
+      [name]: name === "genreId" ? (value ? parseInt(value, 10) : "") : value // <--- LOGIKA PARSE DIPERBAIKI
     });
   };
 
+  // Handler saat form disubmit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError("");
 
-    // Prepare payload, ensuring correct property names if backend expects them
-    // Adjust this payload structure if your backend expects different names (e.g., category_id instead of genreId)
+    // --- VALIDASI FRONTEND SEBELUM SUBMIT ---
+    if (formData.genreId === "" || typeof formData.genreId !== 'number' || formData.genreId <= 0) {
+      setError("Please select a valid genre."); // Tampilkan pesan error
+      return; // Hentikan submit jika genre tidak valid
+    }
+    // --- AKHIR VALIDASI ---
+
+    setIsSubmitting(true);
+    setError(""); // Bersihkan error sebelumnya
+
+    // Siapkan payload untuk dikirim ke API
+    // Pastikan nama field (genre_id) sesuai dengan ekspektasi backend Anda
     const payload = {
       title: formData.title,
-      director: formData.director, // Use director
-      genre_id: formData.genreId, // Map genreId back to category_id if needed by backend
-      // OR if backend expects genre_id:
-      // genre_id: formData.genreId,
+      director: formData.director,
+      genre_id: formData.genreId, // <--- Pastikan backend mengharapkan 'genre_id'
       image_url: formData.imageUrl
     };
 
     try {
-      if (isEditMode && film) { // Check film prop
-        // Update existing film - updated endpoint and ID access
-        await axios.put(`/api/films/${film.id}`, payload, {
+      if (isEditMode && film) {
+        // Mode Edit: Kirim request PUT
+        await axios.put(`/api/films/${film.id}`, payload, { // Endpoint: /api/films/{id}
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       } else {
-        // Create new film - updated endpoint
-        await axios.post("/api/films", payload, {
+        // Mode Tambah: Kirim request POST
+        await axios.post("/api/films", payload, { // Endpoint: /api/films
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       }
-      onSubmit();
+      onSubmit(); // Panggil callback onSubmit dari props jika sukses
     } catch (err: any) {
-      // Updated error message
-      setError(err.response?.data?.message || "An error occurred while saving the film");
+      // Tangani error dari API
+      const apiErrorMessage = err.response?.data?.message || err.message || "An unknown error occurred";
+      console.error("API Error:", err.response?.data || err); // Log detail error
+      setError(`Failed to save film: ${apiErrorMessage}`); // Tampilkan pesan error ke pengguna
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Set isSubmitting kembali ke false
     }
   };
 
+  // Jangan render apapun jika modal tidak terbuka (isOpen false)
   if (!isOpen) return null;
 
+  // Render JSX
   return (
     <div className="fixed inset-0 bg-slate-100 bg-opacity-30 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+      {/* Container Modal */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden w-full max-w-md max-h-[90vh] flex flex-col">
+        {/* Header Modal */}
+        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700 flex-shrink-0">
           <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200">
-            {/* Changed text */}
             {isEditMode ? "Edit Film" : "Add Film"}
           </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            aria-label="Close"
           >
             <CloseOutlined />
           </button>
         </div>
 
-        {error && (
-          <div className="m-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded text-sm">
-            {error}
-          </div>
-        )}
+        {/* Konten Form (Scrollable) */}
+        <form onSubmit={handleSubmit} className="p-4 overflow-y-auto">
+          {/* Tampilkan Pesan Error Global */}
+          {error && (
+            <div className="mb-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded text-sm">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="p-4">
+          {/* Input Title */}
           <div className="mb-4">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title
+              Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -151,100 +173,115 @@ const FilmForm = ({
               value={formData.title}
               onChange={handleChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Enter film title" // Changed placeholder text
+              placeholder="Enter film title"
+              disabled={isSubmitting}
             />
           </div>
 
+          {/* Input Director */}
           <div className="mb-4">
-             {/* Changed label text and htmlFor */}
             <label htmlFor="director" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Director
+              Director <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              id="director" // Changed id
-              name="director" // Changed name
+              id="director"
+              name="director"
               required
-              value={formData.director} // Use director field
+              value={formData.director}
               onChange={handleChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Enter director name" // Changed placeholder text
+              placeholder="Enter director name"
+              disabled={isSubmitting}
             />
           </div>
 
+          {/* Dropdown Genre */}
           <div className="mb-4">
-             {/* Changed label text and htmlFor */}
             <label htmlFor="genreId" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Genre
+              Genre <span className="text-red-500">*</span>
             </label>
             <select
-              id="genreId" // Changed id
-              name="genreId" // Changed name
-              required
-              value={formData.genreId} // Use genreId field
+              id="genreId"
+              name="genreId"
+              value={formData.genreId} // Bind ke state (bisa number atau "")
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              required // Validasi HTML5
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+              // Disable jika genre belum ada atau sedang submit
+              disabled={genres.length === 0 || isSubmitting}
             >
-              {/* Check genres length */}
-              {genres.length === 0 && (
-                // Changed text
-                <option value="">No genres available</option>
-              )}
-              {/* Map over genres */}
+              {/* Opsi placeholder, tidak bisa dipilih */}
+              <option value="" disabled>
+                {genres.length === 0 ? "Loading genres..." : "-- Select a Genre --"}
+              </option>
+              {/* Render opsi genre */}
               {genres.map((genre) => (
-                // Use genre id and name
                 <option key={genre.id} value={genre.id}>
                   {genre.name}
                 </option>
               ))}
             </select>
+             {/* Opsional: Tampilkan error spesifik genre jika ada */}
+             {error && error.toLowerCase().includes("genre") && !formData.genreId && <p className="text-xs text-red-500 mt-1">Please select a genre.</p>}
           </div>
 
+          {/* Input Image URL */}
           <div className="mb-4">
-             {/* Changed label text */}
             <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Poster URL
             </label>
             <input
-              type="text"
+              type="text" // Bisa diubah ke type="url" untuk validasi browser dasar
               id="imageUrl"
               name="imageUrl"
               value={formData.imageUrl}
               onChange={handleChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Enter poster URL (optional)" // Changed placeholder text
+              placeholder="Enter poster URL (optional)"
+              disabled={isSubmitting}
             />
           </div>
 
+          {/* Preview Gambar */}
           {formData.imageUrl && (
             <div className="mb-4">
-               {/* Changed text */}
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Poster Preview:</p>
-              <div className="w-full h-36 overflow-hidden rounded border border-gray-200 dark:border-gray-700">
+              <div className="w-full h-36 overflow-hidden rounded border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                 <img
                   src={formData.imageUrl}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
+                  alt="Poster Preview"
+                  className="w-full h-full object-contain" // Gunakan object-contain agar tidak terpotong
+                  // Fallback jika URL gambar error
                   onError={(e) => {
-                    // Optional: Changed placeholder
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x200?text=Invalid+Poster';
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none'; // Sembunyikan img tag jika error
+                    // Atau tampilkan placeholder
+                    // target.src = 'https://via.placeholder.com/300x200?text=Invalid+Poster';
                   }}
+                  // Tampilkan kembali jika URL diubah dan valid (opsional)
+                  onLoad={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
                 />
+                {/* Teks placeholder jika gambar gagal load */}
+                 <span style={{ display: formData.imageUrl ? 'none' : 'block' }} className="text-gray-400 dark:text-gray-500 text-sm">Invalid Poster URL</span>
               </div>
             </div>
           )}
 
+          {/* Tombol Aksi Form */}
           <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              disabled={isSubmitting} // Disable saat submit
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
+              // Disable saat submit ATAU jika genre belum dipilih
+              disabled={isSubmitting || formData.genreId === ""} // <--- KONDISI DISABLED DIPERBAIKI
               className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 flex items-center gap-1"
             >
               <SaveOutlined /> {isSubmitting ? "Saving..." : isEditMode ? "Update" : "Save"}
@@ -256,4 +293,4 @@ const FilmForm = ({
   );
 };
 
-export default FilmForm; // Renamed default export
+export default FilmForm;
