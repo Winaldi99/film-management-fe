@@ -85,31 +85,49 @@ const Genre = () => {
   };
 
   return (
-    // Changed styling: padding, max-width, background
-    <div className="p-6 max-w-7xl mx-auto bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <div className="flex justify-between items-center mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
-        {/* Changed styling: text size, weight, color */}
-        <h1 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300">
-          Genre Management
-        </h1>
-        <button
-          onClick={handleAddNewClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded flex items-center gap-1 text-sm transition-colors duration-200"
-        >
-          <PlusOutlined /> Add Genre
-        </button>
+    // New layout: Changed container style, gradient background
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-indigo-950">
+      {/* Header area with shadow */}
+      <div className="bg-white dark:bg-gray-800 shadow-md px-6 py-4">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-purple-800 dark:text-purple-300">
+            Genre Library
+          </h1>
+          <button
+            onClick={handleAddNewClick}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full flex items-center gap-2 text-sm transition-colors duration-200 shadow-sm"
+          >
+            <PlusOutlined /> New Genre
+          </button>
+        </div>
       </div>
-
-      {/* Genre List Section */}
-      {genreData && (
-        <GenreList
-          genres={genreData.data} // Pass renamed prop 'genre'
-          onEdit={handleEditClick}
-          onView={handleViewClick}
-          onPageChange={handlePageChange}
-          currentPage={currentPage}
-        />
-      )}
+      
+      {/* Main content container */}
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Your Collection
+            </h2>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Manage and organize your genres
+            </div>
+          </div>
+          
+          {/* Genre List with new styling */}
+          {genreData && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+              <GenreList
+                genres={genreData.data}
+                onEdit={handleEditClick}
+                onView={handleViewClick}
+                onPageChange={handlePageChange}
+                currentPage={currentPage}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Genre Form Modal */}
       {isFormOpen && (
@@ -122,7 +140,7 @@ const Genre = () => {
         />
       )}
 
-      {/* Genre Detail Modal - Pass renamed prop 'genre' */}
+      {/* Genre Detail Modal */}
       {selectedGenre && !isFormOpen && (
         <GenreDetail
           genre={selectedGenre}
