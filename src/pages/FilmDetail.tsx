@@ -6,13 +6,13 @@ import { FilmType } from "./Film";
 import { CloseOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 interface FilmDetailProps {
-  film: FilmType;
+  films: FilmType;
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
+const FilmDetail = ({ films, onClose, onEdit, onDelete }: FilmDetailProps) => {
   const { getToken } = useAuth();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -23,7 +23,7 @@ const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
     setError("");
 
     try {
-      await axios.delete(`/api/films/${film.id}`, {
+      await axios.delete(`/api/films/${films.id}`, {
         headers: { Authorization: `Bearer ${getToken()}` }
       });
       onDelete();
@@ -66,10 +66,10 @@ const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
         <div className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="w-full sm:w-2/5">
-              {film.image_url ? (
+              {films.image_url ? (
                 <img
-                  src={film.image_url}
-                  alt={film.title}
+                  src={films.image_url}
+                  alt={films.title}
                   className="w-full h-56 object-cover rounded-lg shadow-sm"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
@@ -87,26 +87,26 @@ const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
 
             <div className="w-full sm:w-3/5">
               <div className="bg-blue-100 dark:bg-blue-900/30 inline-block px-2 py-0.5 rounded text-xs font-medium text-blue-700 dark:text-blue-300 mb-2">
-                {film.genre?.name || "Uncategorized"}
+                {films.genre?.name || "Uncategorized"}
               </div>
 
               <h1 className="text-xl font-semibold text-gray-800 dark:text-white mb-1">
-                {film.title}
+                {films.title}
               </h1>
               <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
-                Directed by {film.director}
+                Directed by {films.director}
               </p>
 
               <div className="space-y-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
                 <div className="flex">
                   <span className="w-24 font-medium">Added on:</span>
-                  <span>{formatDate(film.created_at)}</span>
+                  <span>{formatDate(films.created_at)}</span>
                 </div>
 
-                {film.updated_at !== film.created_at && (
+                {films.updated_at !== films.created_at && (
                   <div className="flex">
                     <span className="w-24 font-medium">Updated:</span>
-                    <span>{formatDate(film.updated_at)}</span>
+                    <span>{formatDate(films.updated_at)}</span>
                   </div>
                 )}
               </div>
@@ -135,7 +135,7 @@ const FilmDetail = ({ film, onClose, onEdit, onDelete }: FilmDetailProps) => {
                 Confirm Deletion
               </h3>
               <p className="text-red-600 dark:text-red-300 text-sm mb-3">
-                Are you sure you want to delete "{film.title}"?
+                Are you sure you want to delete "{films.title}"?
               </p>
               <div className="flex justify-end space-x-2">
                 <button

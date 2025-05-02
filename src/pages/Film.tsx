@@ -31,7 +31,7 @@ export type GenreType = {
 
 // Renamed function, updated endpoint and return type
 const fetchFilmList = async (token: string | null, page = 1, limit = 10) => {
-  return await axios.get<FilmType[]>(`/api/film?page=${page}&limit=${limit}`, { // Changed endpoint
+  return await axios.get<FilmType[]>(`/api/films?page=${page}&limit=${limit}`, { // Changed endpoint
     headers: { Authorization: `Bearer ${token}` }
   });
 };
@@ -71,15 +71,15 @@ const Film = () => {
   };
 
   // Updated parameter name and type, changed state setter
-  const handleEditClick = (film: FilmType) => {
-    setSelectedFilm(film);
+  const handleEditClick = (films: FilmType) => {
+    setSelectedFilm(films);
     setIsEditMode(true);
     setIsFormOpen(true);
   };
 
   // Updated parameter name and type, changed state setter
-  const handleViewClick = (film: FilmType) => {
-    setSelectedFilm(film);
+  const handleViewClick = (films: FilmType) => {
+    setSelectedFilm(films);
     setIsFormOpen(false);
   };
 
@@ -146,7 +146,7 @@ const Film = () => {
       {/* Changed condition variable */}
       {selectedFilm && !isFormOpen && (
         <FilmDetail // Renamed component
-          film={selectedFilm} // Changed prop name and data source
+          films={selectedFilm} // Changed prop name and data source
           onClose={handleCloseDetail}
           // Pass the correct selected item
           onEdit={() => handleEditClick(selectedFilm)}
