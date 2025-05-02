@@ -85,52 +85,70 @@ const Genre = () => {
   };
 
   return (
-    // Changed styling: padding, max-width, background
-    <div className="p-6 max-w-7xl mx-auto bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <div className="flex justify-between items-center mb-6 border-b pb-3 border-gray-200 dark:border-gray-700">
-        {/* Changed styling: text size, weight, color */}
-        <h1 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300">
-          Genre Management
-        </h1>
-        <button
-          onClick={handleAddNewClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded flex items-center gap-1 text-sm transition-colors duration-200"
-        >
-          <PlusOutlined /> Add Genre
-        </button>
+    // Redesigned layout with sidebar-like structure
+    <div className="flex h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+      {/* Left sidebar */}
+      <div className="w-64 bg-white dark:bg-gray-800 shadow-lg">
+        <div className="p-5 border-b border-gray-200 dark:border-gray-700">
+          <h1 className="text-2xl font-bold text-purple-800 dark:text-purple-400">
+            Genre Library
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Manage your collection
+          </p>
+        </div>
+        
+        <div className="p-5">
+          <button
+            onClick={handleAddNewClick}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            <PlusOutlined /> Create New Genre
+          </button>
+        </div>
+        
+        <div className="p-5 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            <p>Total Genres: {genreData?.data.length || 0}</p>
+            <p className="mt-2">Current Page: {currentPage}</p>
+          </div>
+        </div>
       </div>
 
-      {/* Genre List Section */}
-      {genreData && (
-        <GenreList
-          genres={genreData.data} // Pass renamed prop 'genre'
-          onEdit={handleEditClick}
-          onView={handleViewClick}
-          onPageChange={handlePageChange}
-          currentPage={currentPage}
-        />
-      )}
+      {/* Main content */}
+      <div className="flex-1 overflow-auto p-8">
+        {/* Genre List Section */}
+        {genreData && (
+          <GenreList
+            genres={genreData.data}
+            onEdit={handleEditClick}
+            onView={handleViewClick}
+            onPageChange={handlePageChange}
+            currentPage={currentPage}
+          />
+        )}
 
-      {/* Genre Form Modal */}
-      {isFormOpen && (
-        <GenreForm
-          isOpen={isFormOpen}
-          onClose={handleCloseForm}
-          onSubmit={handleFormSubmit}
-          genre={isEditMode ? selectedGenre : null}
-          isEditMode={isEditMode}
-        />
-      )}
+        {/* Genre Form Modal */}
+        {isFormOpen && (
+          <GenreForm
+            isOpen={isFormOpen}
+            onClose={handleCloseForm}
+            onSubmit={handleFormSubmit}
+            genre={isEditMode ? selectedGenre : null}
+            isEditMode={isEditMode}
+          />
+        )}
 
-      {/* Genre Detail Modal - Pass renamed prop 'genre' */}
-      {selectedGenre && !isFormOpen && (
-        <GenreDetail
-          genre={selectedGenre}
-          onClose={handleCloseDetail}
-          onEdit={() => handleEditClick(selectedGenre)}
-          onDelete={handleDeleteSuccess}
-        />
-      )}
+        {/* Genre Detail Modal */}
+        {selectedGenre && !isFormOpen && (
+          <GenreDetail
+            genre={selectedGenre}
+            onClose={handleCloseDetail}
+            onEdit={() => handleEditClick(selectedGenre)}
+            onDelete={handleDeleteSuccess}
+          />
+        )}
+      </div>
     </div>
   );
 };
