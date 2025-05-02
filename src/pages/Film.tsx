@@ -122,7 +122,7 @@ const Film = () => {
       {/* Film List Section */}
       {filmData && (
         <FilmList // Renamed component
-          films={filmData.data} // Changed prop name and data source
+          film={filmData.data} // Changed prop name and data source
           onEdit={handleEditClick}
           onView={handleViewClick}
           onPageChange={handlePageChange}
