@@ -96,51 +96,56 @@ const Films = () => {
   };
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-          My Films Collection
-        </h1>
-        <button
-          onClick={handleAddNewClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded flex items-center gap-1 text-sm transition-colors duration-200"
-        >
-          <PlusOutlined /> Add Film
-        </button>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-8">
+        <div className="relative mb-8">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-xl shadow-lg">
+            <h1 className="text-3xl font-bold text-white mb-2">Film Collection</h1>
+            <p className="text-blue-100 text-lg">Manage your favorite movies in one place</p>
+            <button
+              onClick={handleAddNewClick}
+              className="absolute top-6 right-6 bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-md transition-all duration-200"
+            >
+              <PlusOutlined /> Add New Film
+            </button>
+          </div>
+        </div>
+
+        {/* Film List Section */}
+        <div className="mb-10">
+          {filmData && (
+            <FilmList
+              films={filmData.data}
+              onEdit={handleEditClick}
+              onView={handleViewClick}
+              onPageChange={handlePageChange}
+              currentPage={currentPage}
+            />
+          )}
+        </div>
+
+        {/* Film Form Modal */}
+        {isFormOpen && (
+          <FilmForm
+            isOpen={isFormOpen}
+            onClose={handleCloseForm}
+            onSubmit={handleFormSubmit}
+            film={isEditMode ? selectedFilm : null}
+            isEditMode={isEditMode}
+            genres={genreData?.data || []}
+          />
+        )}
+
+        {/* Film Detail Modal */}
+        {selectedFilm && !isFormOpen && (
+          <FilmDetail
+            film={selectedFilm}
+            onClose={handleCloseDetail}
+            onEdit={() => handleEditClick(selectedFilm)}
+            onDelete={handleDeleteSuccess}
+          />
+        )}
       </div>
-
-      {/* Film List Section */}
-      {filmData && (
-        <FilmList
-          films={filmData.data}
-          onEdit={handleEditClick}
-          onView={handleViewClick}
-          onPageChange={handlePageChange}
-          currentPage={currentPage}
-        />
-      )}
-
-      {/* Film Form Modal */}
-      {isFormOpen && (
-        <FilmForm
-          isOpen={isFormOpen}
-          onClose={handleCloseForm}
-          onSubmit={handleFormSubmit}
-          film={isEditMode ? selectedFilm : null}
-          isEditMode={isEditMode}
-          genres={genreData?.data || []}
-        />
-      )}
-
-      {/* Film Detail Modal */}
-      {selectedFilm && !isFormOpen && (
-        <FilmDetail
-          film={selectedFilm}
-          onClose={handleCloseDetail}
-          onEdit={() => handleEditClick(selectedFilm)}
-          onDelete={handleDeleteSuccess}
-        />
-      )}
     </div>
   );
 };
