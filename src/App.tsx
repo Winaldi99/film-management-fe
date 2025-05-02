@@ -11,7 +11,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
 import Genre from "./pages/Genre";
-import Films from "./pages/Film";
+import Films from "./pages/Films";
 import Comment from "./pages/Comment";
 import Register from "./pages/Register";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -88,11 +88,11 @@ function App() {
   );
   return (
     <>
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </AuthProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </AuthProvider>
     </>
   );
 }
