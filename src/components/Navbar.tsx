@@ -36,7 +36,7 @@ const Navbar = () => {
               </div>
 
               <div className="flex items-center">
-                <PlaySquareOutlined className="text-3xl text-white" />
+                <PlaySquareOutlined className="text-3xl text-red-700" />
                 <div className="hidden sm:flex sm:ml-6">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
