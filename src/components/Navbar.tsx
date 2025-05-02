@@ -18,70 +18,77 @@ function classNames(...classes: string[]) {
 const Navbar = () => {
   const { logout } = useAuth();
   return (
-    <Disclosure as="nav" className="bg-gray-800 shadow-lg">
+    <Disclosure as="nav" className="bg-gradient-to-r from-gray-900 to-gray-800 shadow-xl">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 items-center justify-between">
-              {/* Mobile menu button */}
-              <div className="sm:hidden">
-                <Disclosure.Button className="p-2 text-gray-400 hover:text-white">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <CloseOutlined className="h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <MenuOutlined className="h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
+            <div className="flex h-20 items-center justify-between">
+              {/* Logo and brand on the left */}
+              <div className="flex items-center">
+                <div className="flex items-center space-x-2">
+                  <PlaySquareOutlined className="text-4xl text-red-500" />
+                  <span className="text-white font-bold text-xl hidden md:block">BenMovie</span>
+                </div>
               </div>
 
-              <div className="flex items-center">
-                <PlaySquareOutlined className="text-3xl text-red-700" />
-                <div className="hidden sm:flex sm:ml-6">
-                  <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <NavLink
-                        to={item.to}
-                        key={item.name}
-                        className={({ isActive }) => 
-                          classNames(
-                            isActive
-                              ? "text-indigo-300 border-b-2 border-indigo-300"
-                              : "text-gray-200 hover:text-indigo-300",
-                            "px-3 py-2 text-sm font-medium"
-                          )
-                        }
-                      >
-                        {item.name}
-                      </NavLink>
-                    ))}
-                  </div>
+              {/* Navigation in the center */}
+              <div className="hidden sm:flex items-center justify-center flex-1 mx-10">
+                <div className="flex space-x-8">
+                  {navigation.map((item) => (
+                    <NavLink
+                      to={item.to}
+                      key={item.name}
+                      className={({ isActive }) => 
+                        classNames(
+                          isActive
+                            ? "text-yellow-300 border-b-2 border-yellow-300"
+                            : "text-gray-200 hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300",
+                          "px-3 py-2 text-base font-medium transition-all duration-200"
+                        )
+                      }
+                    >
+                      {item.name}
+                    </NavLink>
+                  ))}
                 </div>
               </div>
               
-              <div className="flex items-center space-x-4">
+              {/* Controls on the right */}
+              <div className="flex items-center space-x-6">
                 <button
                   type="button"
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-300 hover:text-yellow-300 transition-colors duration-200"
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellOutlined className="text-xl" />
+                  <BellOutlined className="text-2xl" />
                 </button>
 
                 <button
                   onClick={() => logout()}
-                  className="flex items-center px-3 py-1 text-sm font-medium text-gray-200 hover:text-indigo-300"
+                  className="flex items-center px-4 py-2 rounded-full text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
                 >
-                  <LogoutOutlined className="mr-1" />
+                  <LogoutOutlined className="mr-2" />
                   Logout
                 </button>
+
+                {/* Mobile menu button */}
+                <div className="sm:hidden">
+                  <Disclosure.Button className="p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700">
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <CloseOutlined className="h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <MenuOutlined className="h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Mobile menu */}
           <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2 bg-gray-700">
+            <div className="space-y-1 px-3 pb-3 pt-2 bg-gray-800 border-t border-gray-700">
               {navigation.map((item) => (
                 <NavLink
                   to={item.to}
@@ -89,9 +96,9 @@ const Navbar = () => {
                   className={({ isActive }) => 
                     classNames(
                       isActive 
-                        ? 'text-indigo-300 bg-gray-600' 
-                        : 'text-gray-300 hover:bg-gray-600 hover:text-indigo-300',
-                      'block px-3 py-2 rounded-md text-base font-medium'
+                        ? 'text-yellow-300 bg-gray-700' 
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-yellow-300',
+                      'block px-3 py-3 rounded-md text-base font-medium border-b border-gray-700 flex items-center'
                     )
                   }
                 >
