@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-import { FilmType } from "./Films";
+import { FilmType } from "./Film";
 import { CloseOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 interface FilmDetailProps {

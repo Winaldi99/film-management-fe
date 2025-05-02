@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-import { FilmType, GenreType } from "../pages/Films";
+import { FilmType, GenreType } from "../pages/Film";
 import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
 
 interface FilmFormProps {
@@ -68,12 +68,12 @@ const FilmForm = ({
     try {
       if (isEditMode && film) {
         // Update existing film
-        await axios.put(`/api/films/${film.id}`, formData, {
+        await axios.put(`/api/film/${film.id}`, formData, {
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       } else {
         // Create new film
-        await axios.post("/api/films", formData, {
+        await axios.post("/api/film", formData, {
           headers: { Authorization: `Bearer ${getToken()}` }
         });
       }

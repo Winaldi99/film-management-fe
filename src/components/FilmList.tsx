@@ -1,25 +1,25 @@
 // FilmList.tsx
-import { FilmType } from "../pages/Films";
+import { FilmType } from "../pages/Film";
 import { EyeOutlined, EditOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 interface FilmListProps {
-  films: FilmType[];
+  film: FilmType[];
   onEdit: (film: FilmType) => void;
   onView: (film: FilmType) => void;
   onPageChange: (page: number) => void;
   currentPage: number;
 }
 
-const FilmList = ({ films, onEdit, onView, onPageChange, currentPage }: FilmListProps) => {
+const FilmList = ({ film, onEdit, onView, onPageChange, currentPage }: FilmListProps) => {
   return (
     <div>
-      {films.length === 0 ? (
+      {film.length === 0 ? (
         <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-gray-500 dark:text-gray-400">No films found. Add a new film to your collection!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {films.map((film) => (
+          {film.map((film) => (
             <FilmCard
               key={film.id}
               film={film}
