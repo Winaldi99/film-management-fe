@@ -87,7 +87,7 @@ const FilmForm = ({
     const payload = {
       title: formData.title,
       director: formData.director, // Use director
-      category_id: formData.genreId, // Map genreId back to category_id if needed by backend
+      genre_id: formData.genreId, // Map genreId back to category_id if needed by backend
       // OR if backend expects genre_id:
       // genre_id: formData.genreId,
       image_url: formData.imageUrl
