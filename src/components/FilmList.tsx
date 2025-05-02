@@ -67,7 +67,7 @@ interface FilmCardProps {
 
 const FilmCard = ({ film, onEdit, onView }: FilmCardProps) => {
   return (
-    <div className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+    <div className="group bg-white dark:bg-slate-100 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full">
       <div className="relative h-48 overflow-hidden">
         {film.image_url ? (
           <img
