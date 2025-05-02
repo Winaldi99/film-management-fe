@@ -1,39 +1,24 @@
-// FilmList.tsx - Component to display list of films in a card grid
-import { FilmType } from "../pages/Films"; // Updated import path and type
-import { EyeOutlined, EditOutlined, LeftOutlined, RightOutlined, PlayCircleOutlined, TagOutlined } from "@ant-design/icons"; // Added icons
+// FilmList.tsx
+import { FilmType } from "../pages/Films";
+import { EyeOutlined, EditOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 interface FilmListProps {
-  films: FilmType[]; // Renamed prop and type
-  onEdit: (film: FilmType) => void; // Updated type
-  onView: (film: FilmType) => void; // Updated type
+  films: FilmType[];
+  onEdit: (film: FilmType) => void;
+  onView: (film: FilmType) => void;
   onPageChange: (page: number) => void;
   currentPage: number;
-  totalPages?: number; // Optional: for disabling next button
 }
 
-const FilmList = ({
-  films, // Renamed prop
-  onEdit,
-  onView,
-  onPageChange,
-  currentPage,
-  totalPages
-}: FilmListProps) => {
-  const hasNextPage = totalPages ? currentPage < totalPages : films.length > 0; // Basic check if next page likely exists
-
+const FilmList = ({ films, onEdit, onView, onPageChange, currentPage }: FilmListProps) => {
   return (
     <div>
       {films.length === 0 ? (
-        // Changed styling: Empty state message
-        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-           <PlayCircleOutlined className="text-5xl text-gray-400 dark:text-gray-500 mb-4" />
-          <p className="text-lg font-medium text-gray-600 dark:text-gray-300">No films found.</p>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Your film collection is empty. Add a film!</p>
+        <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <p className="text-gray-500 dark:text-gray-400">No films found. Add a new film to your collection!</p>
         </div>
       ) : (
-        // Changed styling: Grid layout for cards
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
-          {/* Use renamed variable 'films' and 'film' */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {films.map((film) => (
             <FilmCard
               key={film.id}
@@ -44,40 +29,32 @@ const FilmList = ({
           ))}
         </div>
       )}
-
-      {/* Pagination - Changed Styling */}
-      {films.length > 0 && ( // Only show pagination if there are items
-        <div className="flex justify-center mt-8 py-4">
-          <nav className="flex items-center space-x-3" aria-label="Pagination">
-            <button
-              onClick={() => onPageChange(currentPage - 1)}
-              disabled={currentPage <= 1}
-              aria-label="Previous Page"
-              // Changed styling: Pagination buttons
-              className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <LeftOutlined className="text-base" />
-            </button>
-            <span className="px-4 py-2 rounded-lg bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 text-sm font-semibold">
-              Page {currentPage}
-            </span>
-            <button
-              onClick={() => onPageChange(currentPage + 1)}
-              disabled={!hasNextPage} // Use calculated value
-              aria-label="Next Page"
-              // Changed styling: Pagination buttons
-              className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <RightOutlined className="text-base" />
-            </button>
-          </nav>
+      
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className="p-1.5 rounded border border-gray-300 dark:border-gray-600 disabled:opacity-50 flex items-center justify-center text-gray-500 dark:text-gray-400 disabled:text-gray-300 dark:disabled:text-gray-600"
+          >
+            <LeftOutlined />
+          </button>
+          <span className="px-3 py-1.5 rounded bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm">
+            {currentPage}
+          </span>
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            className="p-1.5 rounded border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-400"
+          >
+            <RightOutlined />
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-// Renamed component and props
 interface FilmCardProps {
   film: FilmType;
   onEdit: () => void;
@@ -86,56 +63,39 @@ interface FilmCardProps {
 
 const FilmCard = ({ film, onEdit, onView }: FilmCardProps) => {
   return (
-    // Changed styling: Card appearance, hover effect
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 ease-in-out transform hover:-translate-y-1 group">
-      <div className="relative h-56 sm:h-64 w-full overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-transform duration-200 hover:shadow-md">
+      <div className="relative h-48">
         {film.image_url ? (
           <img
             src={film.image_url}
             alt={film.title}
-            // Changed styling: Image scaling on hover
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x600/cccccc/969696?text=No+Poster'; // Placeholder image
+              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
             }}
-            loading="lazy" // Add lazy loading
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600">
-            <PlayCircleOutlined className="text-4xl text-gray-500 dark:text-gray-400 opacity-50" />
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+            <span className="text-gray-500 dark:text-gray-400">No Image</span>
           </div>
         )}
-        {/* Changed styling: Genre badge position and style */}
-        <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 backdrop-blur-sm px-2.5 py-1 rounded-md text-xs font-medium text-white flex items-center gap-1">
-          <TagOutlined />
-          {film.genre?.name || "N/A"} {/* Use film.genre */}
+        <div className="absolute top-2 right-2 bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded text-xs font-medium text-blue-700 dark:text-blue-300">
+          {film.genre?.name || "Uncategorized"}
         </div>
       </div>
-      {/* Changed styling: Card content area */}
-      <div className="p-4">
-        {/* Use film.title */}
-        <h3 className="font-semibold text-base text-gray-800 dark:text-white mb-1 truncate" title={film.title}>
-            {film.title}
-        </h3>
-        {/* Use film.director */}
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-3 truncate" title={`Directed by ${film.director}`}>
-            Dir. {film.director}
-        </p>
-        {/* Changed styling: Action buttons area */}
-        <div className="flex justify-end items-center space-x-3 mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
-          {/* Changed styling: View button */}
+      <div className="p-3">
+        <h3 className="font-medium text-gray-800 dark:text-white mb-1 truncate">{film.title}</h3>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">Directed by {film.director}</p>
+        <div className="flex justify-between items-center mt-3">
           <button
             onClick={onView}
-            title="View Details"
-            className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+            className="flex items-center gap-1 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
           >
-            <EyeOutlined /> Details
+            <EyeOutlined /> View
           </button>
-          {/* Changed styling: Edit button */}
           <button
             onClick={onEdit}
-            title="Edit Film"
-            className="flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-sm"
+            className="flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-sm"
           >
             <EditOutlined /> Edit
           </button>

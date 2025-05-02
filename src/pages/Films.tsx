@@ -1,49 +1,40 @@
-// Films.tsx - Main component for managing films
+// Films.tsx - Main component
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import axios from "../utils/AxiosInstance";
-import FilmList from "../components/FilmList"; // Renamed import
-import FilmForm from "../components/FilmForm"; // Renamed import
-import FilmDetail from "./FIlmDetail"; // Renamed import
-import { VideoCameraAddOutlined } from "@ant-design/icons"; // Changed Icon
+import FilmList from "../components/FilmList";
+import FilmForm from "../components/FilmForm";
+import FilmDetail from "./FilmDetail";
+import { PlusOutlined } from "@ant-design/icons";
 
-// Updated Type: Renamed, 'author' -> 'director', 'category'/'category_id' -> 'genre'/'genre_id'
 export type FilmType = {
   id: number;
   title: string;
-  director: string; // Changed from 'author'
-  genre_id: number; // Changed from 'category_id'
-  genre: { // Changed from 'category'
+  director: string;
+  genre_id: number;
+  genre: {
     id: number;
-    name: string; // Assuming Genre API returns 'name'
+    name: string;
   };
   image_url: string;
   created_at: string;
   updated_at: string;
 };
 
-// Renamed Type for clarity (could reuse from Genre page if structure is identical)
 export type GenreType = {
   id: number;
-  name: string; // Assuming Genre API returns 'name'
+  name: string;
 };
 
-// Updated fetch function name and endpoint
-const fetchFilmList = async (token: string | null, page = 1, limit = 12) => { // Increased limit for grid view
-  // Changed API endpoint
-  return await axios.get<{ data: FilmType[], total: number }>( // Assuming API returns pagination data
-    `/api/films?page=${page}&limit=${limit}`, // Changed endpoint
-    {
-      headers: { Authorization: `Bearer ${token}` }
-    }
-  );
+const fetchFilmList = async (token: string | null, page = 1, limit = 10) => {
+  return await axios.get<FilmType[]>(`/api/films?page=${page}&limit=${limit}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
 };
 
-// Updated fetch function name and endpoint
 const fetchGenres = async (token: string | null) => {
-  // Changed API endpoint
-  return await axios.get<GenreType[]>("/api/genre", { // Changed endpoint
+  return await axios.get<GenreType[]>("/api/genre", {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
@@ -51,40 +42,35 @@ const fetchGenres = async (token: string | null) => {
 const Films = () => {
   const { getToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
-  // Renamed state variable and type
   const [selectedFilm, setSelectedFilm] = useState<FilmType | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // Updated queryKey, queryFn, and data variable name
-  const { data: filmResponse, refetch: refetchFilms } = useQuery({ // Renamed data variable
-    queryKey: ["filmList", currentPage], // Changed query key
-    queryFn: () => fetchFilmList(getToken(), currentPage) // Changed function call
+  const { data: filmData, refetch: refetchFilms } = useQuery({
+    queryKey: ["filmList", currentPage],
+    queryFn: () => fetchFilmList(getToken(), currentPage)
   });
 
-  // Updated queryKey, queryFn, and data variable name
   const { data: genreData } = useQuery({
-    queryKey: ["genres"], // Changed query key
-    queryFn: () => fetchGenres(getToken()) // Changed function call
+    queryKey: ["genres"],
+    queryFn: () => fetchGenres(getToken())
   });
 
   const handleAddNewClick = () => {
-    setSelectedFilm(null); // Use renamed state setter
+    setSelectedFilm(null);
     setIsEditMode(false);
     setIsFormOpen(true);
   };
 
-  // Updated parameter type and state setter
   const handleEditClick = (film: FilmType) => {
-    setSelectedFilm(film); // Use renamed state setter
+    setSelectedFilm(film);
     setIsEditMode(true);
     setIsFormOpen(true);
   };
 
-  // Updated parameter type and state setter
   const handleViewClick = (film: FilmType) => {
-    setSelectedFilm(film); // Use renamed state setter
-    setIsFormOpen(false); // Keep form closed when viewing details
+    setSelectedFilm(film);
+    setIsFormOpen(false);
   };
 
   const handleCloseForm = () => {
@@ -92,80 +78,69 @@ const Films = () => {
   };
 
   const handleCloseDetail = () => {
-    setSelectedFilm(null); // Use renamed state setter
+    setSelectedFilm(null);
   };
 
   const handleFormSubmit = () => {
-    refetchFilms(); // Use renamed refetch function
+    refetchFilms();
     setIsFormOpen(false);
   };
 
   const handleDeleteSuccess = () => {
-    refetchFilms(); // Use renamed refetch function
-    setSelectedFilm(null); // Use renamed state setter
+    refetchFilms();
+    setSelectedFilm(null);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const films = filmResponse?.data?.data || []; // Extract films array
-  // const totalFilms = filmResponse?.data?.total || 0; // Extract total count if available
-  // const totalPages = Math.ceil(totalFilms / 12); // Calculate total pages if needed
-
   return (
-    // Changed styling: background, padding, max-width
-    <div className="bg-gradient-to-br from-gray-100 to-blue-50 dark:from-gray-900 dark:to-slate-800 min-h-screen p-5 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 md:mb-8 gap-4">
-          {/* Changed styling: Title */}
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
-            My Film Collection
-          </h1>
-          <button
-            onClick={handleAddNewClick}
-            // Changed styling: Add button
-            className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2 rounded-full flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
-          >
-            <VideoCameraAddOutlined /> Add Film
-          </button>
-        </div>
+    <div className="p-4 max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+          My Films Collection
+        </h1>
+        <button
+          onClick={handleAddNewClick}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded flex items-center gap-1 text-sm transition-colors duration-200"
+        >
+          <PlusOutlined /> Add Film
+        </button>
+      </div>
 
-        {/* Film List Section - Pass renamed props */}
-        {/* Pass films array directly */}
+      {/* Film List Section */}
+      {filmData && (
         <FilmList
-          films={films}
+          films={filmData.data}
           onEdit={handleEditClick}
           onView={handleViewClick}
           onPageChange={handlePageChange}
           currentPage={currentPage}
-          // Pass totalPages if available for better pagination control
-          // totalPages={totalPages}
         />
+      )}
 
-        {/* Film Form Modal - Pass renamed props */}
-        {isFormOpen && (
-          <FilmForm
-            isOpen={isFormOpen}
-            onClose={handleCloseForm}
-            onSubmit={handleFormSubmit}
-            film={isEditMode ? selectedFilm : null} // Pass renamed prop 'film'
-            isEditMode={isEditMode}
-            genres={genreData?.data || []} // Pass renamed prop 'genres'
-          />
-        )}
+      {/* Film Form Modal */}
+      {isFormOpen && (
+        <FilmForm
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          onSubmit={handleFormSubmit}
+          film={isEditMode ? selectedFilm : null}
+          isEditMode={isEditMode}
+          genres={genreData?.data || []}
+        />
+      )}
 
-        {/* Film Detail Modal - Pass renamed prop 'film' */}
-        {/* Condition ensures Detail only shows if a film is selected AND the form is NOT open */}
-        {selectedFilm && !isFormOpen && (
-          <FilmDetail
-            film={selectedFilm} // Pass renamed prop 'film'
-            onClose={handleCloseDetail}
-            onEdit={() => handleEditClick(selectedFilm)} // Pass correct film object
-            onDelete={handleDeleteSuccess}
-          />
-        )}
-      </div>
+      {/* Film Detail Modal */}
+      {selectedFilm && !isFormOpen && (
+        <FilmDetail
+          film={selectedFilm}
+          onClose={handleCloseDetail}
+          onEdit={() => handleEditClick(selectedFilm)}
+          onDelete={handleDeleteSuccess}
+        />
+      )}
     </div>
   );
 };
